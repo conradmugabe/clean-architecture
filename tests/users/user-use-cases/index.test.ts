@@ -5,6 +5,8 @@ import { UserUseCases } from '@/users/user-use-cases';
 import { User } from '@/users/core';
 import { UserDatabase } from '@/users/database-services';
 import { NotFoundError } from '@/utils/errors/not-found-error';
+import { BadRequestError } from '@/utils/errors/bad-request-error';
+
 import { fourUsers, tenUsers } from './test-data';
 
 let mockUserDatabase: MockProxy<UserDatabase>;
@@ -61,10 +63,10 @@ describe('Test UserUseCases.getUserById', () => {
   ];
 
   test.each(testCases)('$name', async (testCase) => {
-    try {
-      const userUseCases = new UserUseCases(mockUserDatabase);
-      mockUserDatabase.findUserById.mockResolvedValue(testCase.databaseReturn);
+    const userUseCases = new UserUseCases(mockUserDatabase);
+    mockUserDatabase.findUserById.mockResolvedValue(testCase.databaseReturn);
 
+    try {
       const actual = await userUseCases.getUserById(testCase.userId);
 
       if (testCase.error) {
@@ -115,5 +117,57 @@ describe('Test UserUseCases.getUsers', () => {
 
     expect(actual).toEqual(expected);
     expect(actual).toHaveLength(expected.length);
+  });
+});
+
+describe('Test UserUseCases.createUser', () => {
+  interface TestCase {
+    name: string;
+    input: string;
+    findUserById: User | null;
+    createUser?: User;
+    expected?: User;
+    error?: BadRequestError;
+  }
+
+  const testCases: TestCase[] = [
+    {
+      name: 'throws a BadRequestError `Invalid Credentials`',
+      input: '4',
+      findUserById: { id: '4' },
+      error: new BadRequestError('Invalid Credentials'),
+    },
+    {
+      name: 'returns user with id 5',
+      input: '5',
+      findUserById: null,
+      createUser: { id: '5' },
+      expected: { id: '5' },
+    },
+  ];
+
+  test.each(testCases)('$name', async (testCase) => {
+    const userUseCases = new UserUseCases(mockUserDatabase);
+    mockUserDatabase.findUserById.mockResolvedValue(testCase.findUserById);
+
+    if (testCase.createUser) {
+      mockUserDatabase.createUser.mockResolvedValue(testCase.createUser);
+    }
+
+    try {
+      const actual = await userUseCases.createUser(testCase.input);
+
+      if (testCase.error) {
+        expect.fail('test case should throw an error');
+      }
+
+      expect(actual).toEqual(testCase.expected);
+    } catch (error) {
+      if (!testCase.error) {
+        expect.fail('test case should not throw an error');
+      }
+
+      expect(error).toEqual(testCase.error);
+    }
   });
 });
