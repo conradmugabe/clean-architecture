@@ -1,13 +1,16 @@
-name: "Build"
+name: 'Testing 🧪'
 
 on:
   push:
     branches-ignore:
       - main
+  pull_request:
+    branches-ignore:
+      - main
 
 jobs:
   testing:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout repository 🔔
         uses: actions/checkout@v4
@@ -15,7 +18,7 @@ jobs:
       - name: Setup Node ☊
         uses: actions/setup-node@v4
         with:
-          node-version: "18"
+          node-version: '18'
 
       - name: Install Dependencies ⚙️
         run: pnpm install --frozen-lockfile
