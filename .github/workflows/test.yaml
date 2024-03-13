@@ -22,9 +22,3 @@ jobs:
 
       - name: Run Tests 🧪
         run: pnpm test
-
-      # - name: Checking Code Formatting 🎩👔👞
-      #   run: pnpm  format:check
-
-      # - name: Checking Project Build 🔨👷🏾‍♀️⛏️
-      #   run: pnpm run build
