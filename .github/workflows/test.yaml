@@ -21,7 +21,9 @@ jobs:
           node-version: '18'
 
       - name: Install Dependencies ⚙️
-        run: npm install -g pnpm@$8.6.12 && pnpm install --frozen-lockfile
+        run: |
+          npm install -g pnpm@$8.6.12
+          pnpm install --frozen-lockfile
 
       - name: Run All Tests 🧪
         run: pnpm test
