@@ -10,7 +10,9 @@
     "test:coverage": "vitest run --reporter=verbose --coverage",
     "test:watch": "vitest --reporter=verbose --coverage",
     "test:ui": "vitest --ui",
-    "test:integration": "vitest run integration"
+    "test:integration": "vitest run integration",
+    "test:unit": "vitest run unit",
+    "test:ui:unit": "vitest unit --ui"
   },
   "keywords": [
     "config",
