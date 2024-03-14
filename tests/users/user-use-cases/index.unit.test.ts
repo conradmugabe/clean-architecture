@@ -25,8 +25,6 @@ describe('Test UserUseCases', {}, () => {
 });
 
 describe('Test UserUseCases.getUserById', () => {
-  const userUseCases = new UserUseCases(mockUserDatabase);
-
   interface TestCase {
     name: string;
     userId: string;
