@@ -78,3 +78,24 @@ describe('Test MySqlUserDatabaseService.findUserById', () => {
     expect(actual).toEqual(testCase.expected);
   });
 });
+
+describe('Test MySqlUserDatabaseService.findUsers', () => {
+  interface TestCase {
+    name: string;
+    expected: User[];
+    expectedLength: number;
+  }
+
+  const testCases: TestCase[] = [
+    { name: 'returns all users', expected: [], expectedLength: 0 },
+  ];
+
+  test.each(testCases)('$name', async (testCase) => {
+    const userDatabase = new MySqlUserDatabaseService(db);
+
+    const actual = await userDatabase.findUsers();
+
+    expect(actual).toEqual(testCase.expected);
+    expect(actual.length).toEqual(testCase.expectedLength);
+  });
+});
