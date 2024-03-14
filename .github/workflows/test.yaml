@@ -16,12 +16,18 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Node ☊
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '18'
 
       - name: Install Dependencies ⚙️
-        run: npm install
+        run: npm ci
       
       - name: Run All Tests 🧪
-        run: npm run test:unit
+        run: npm run test:coverage
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4.0.1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: conradmugabe/clean-architecture
