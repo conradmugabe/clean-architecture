@@ -1,20 +1,7 @@
-import { afterAll, beforeAll, describe, expect, test } from 'vitest';
-import { MySqlContainer, StartedMySqlContainer } from '@testcontainers/mysql';
+import { describe, expect, test } from 'vitest';
 
 import { migrate } from '@/users/database-services/mysql-database-service/migrate';
-
-let container: MySqlContainer = new MySqlContainer();
-let startedContainer: StartedMySqlContainer;
-
-const SIXTY_SECONDS = 60 * 1000;
-
-beforeAll(async () => {
-  startedContainer = await container.start();
-}, SIXTY_SECONDS);
-
-afterAll(async () => {
-  await startedContainer.stop();
-}, SIXTY_SECONDS);
+import { runningMysqlContainer } from '@tests/setup.integration';
 
 describe('Test Mysql Database Connector Migrate', () => {
   const errorPort = 1000;
@@ -43,7 +30,7 @@ describe('Test Mysql Database Connector Migrate', () => {
 
   test.each(testCases)('$name', async (testCase) => {
     const connectionUri =
-      testCase.connectionUri || startedContainer.getConnectionUri();
+      testCase.connectionUri || runningMysqlContainer.getConnectionUri();
 
     try {
       const db = await migrate(connectionUri);
