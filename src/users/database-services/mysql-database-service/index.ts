@@ -16,8 +16,6 @@ export class MySqlUserDatabaseService extends UserDatabase {
       .values({ id: Number(userId) })
       .execute();
 
-    console.log(users);
-    console.log('user', users[0]);
     return { id: userId };
   }
 
@@ -28,8 +26,6 @@ export class MySqlUserDatabaseService extends UserDatabase {
   }
 
   async findUserById(userId: string): Promise<User | null> {
-    console.log('this', this.db);
-    
     const users = await this.db
       .select()
       .from(userSchema)

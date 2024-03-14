@@ -7,39 +7,31 @@ import {
   test,
 } from 'vitest';
 import { MySqlContainer, StartedMySqlContainer } from '@testcontainers/mysql';
-import { drizzle } from 'drizzle-orm/mysql2';
-import * as mysql from 'mysql2/promise';
 import { MySql2Database } from 'drizzle-orm/mysql2';
 
+import { migrate } from '@/users/database-services/mysql-database-service/migrate';
 import { MySqlUserDatabaseService } from '@/users/database-services/mysql-database-service';
-import { User } from '@/users/core';
 import { users as userSchema } from '@/users/database-services/mysql-database-service/schema';
+import { User } from '@/users/core';
 
 import { tenUsers } from '../test_data';
-
-console.log('Welcome to this integration testing suite');
 
 let db: MySql2Database<Record<string, never>>;
 
 let container: MySqlContainer = new MySqlContainer();
 let startedContainer: StartedMySqlContainer;
 
+const SIXTY_SECONDS = 60 * 1000;
+
 beforeAll(async () => {
-  console.log('Starting containers...');
   startedContainer = await container.start();
 
-  console.log('Started containers...');
-  console.log(
-    `Connecting to database on ${startedContainer.getConnectionUri()}...`
-  );
-
-  const connection = mysql.createPool(startedContainer.getConnectionUri());
-  db = drizzle(connection);
-});
+  db = await migrate(startedContainer.getConnectionUri());
+}, SIXTY_SECONDS);
 
 afterAll(async () => {
   await startedContainer.stop();
-});
+}, SIXTY_SECONDS);
 
 describe('Test MySqlUserDatabaseService', () => {
   const userDatabase = new MySqlUserDatabaseService(db);
