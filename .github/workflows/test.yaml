@@ -11,17 +11,33 @@ on:
 jobs:
   testing:
     runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        node-version: [18]
+
     steps:
       - name: Checkout repository 🔔
         uses: actions/checkout@v4
 
-      - name: Setup Node ☊
-        uses: actions/setup-node@v3
+      - name: Setup pnpm 📦
+        uses: pnpm/action-setup@v3
         with:
-          node-version: '18'
+          version: 8
+
+      - name: Setup Node ${{ matrix.node-version }} ☊
+        uses: actions/setup-node@v4
+        with:
+          node-version: '${{ matrix.node-version }}'
+          cache: 'pnpm'
 
       - name: Install Dependencies ⚙️
-        run: npm install
-      
+        run: pnpm install --frozen-lockfile
+
       - name: Run All Tests 🧪
-        run: npm run test:unit
+        run: pnpm test:coverage
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4.0.1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: conradmugabe/clean-architecture

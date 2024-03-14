@@ -1,23 +1,24 @@
 {
-  "name": "node_typescript_env",
+  "name": "clean_architecture",
   "version": "1.0.0",
-  "description": "",
+  "description": "Clean Architecture with Typescript",
   "main": "index.js",
   "scripts": {
     "start": "ts-node src/index.ts",
     "dev": "ts-node-dev src/index.ts",
-    "test": "vitest run",
-    "test:coverage": "vitest run --reporter=verbose --coverage",
-    "test:watch": "vitest --reporter=verbose --coverage",
-    "test:ui": "vitest --ui",
-    "test:integration": "vitest run integration",
-    "test:unit": "vitest run unit",
-    "test:ui:unit": "vitest unit --ui"
+    "test": "vitest run unit --reporter=verbose",
+    "test:coverage": "vitest run unit --reporter=verbose --coverage",
+    "test:watch": "vitest unit --reporter=verbose --coverage",
+    "test:ui": "vitest unit --ui",
+    "test:integration": "vitest run integration --reporter=verbose --coverage",
+    "test:all": "vitest run",
+    "test:all:coverage": "vitest run --reporter=verbose --coverage"
   },
   "keywords": [
     "config",
     "env",
-    "testing"
+    "testing",
+    "clean architecture"
   ],
   "author": "Conrad Mugabe",
   "license": "MIT",
